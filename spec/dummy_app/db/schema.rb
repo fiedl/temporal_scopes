@@ -11,13 +11,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140523225922) do
+ActiveRecord::Schema.define(version: 20140527000754) do
 
   create_table "articles", force: true do |t|
     t.string   "title"
     t.text     "body"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "valid_from"
+    t.datetime "valid_to"
   end
+
+  add_index "articles", ["valid_from"], name: "index_articles_on_valid_from"
+  add_index "articles", ["valid_to"], name: "index_articles_on_valid_to"
 
 end
