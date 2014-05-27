@@ -33,6 +33,6 @@ bundle exec rake db:migrate
 
 ## Author and License
 
-(c) 2014, Sebastian Fiedlschuster.
+Copyright (c) 2014 Sebastian Fiedlschuster.
 
-Released under the [MIT-License](MIT-LICENSE).
+Released under the [MIT License](MIT-LICENSE).
