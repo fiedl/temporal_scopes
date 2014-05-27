@@ -18,5 +18,6 @@ group :development, :test do
   gem 'factory_girl_rails'
   gem 'fuubar'
   gem 'guard-rspec', '~> 4.2', require: false
+  gem 'timecop'
 end
 
