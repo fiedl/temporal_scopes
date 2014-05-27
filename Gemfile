@@ -17,5 +17,6 @@ group :development, :test do
   gem 'rspec-rails', '~> 2.14.2'
   gem 'factory_girl_rails'
   gem 'fuubar'
+  gem 'guard-rspec', '~> 4.2', require: false
 end
 
