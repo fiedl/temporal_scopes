@@ -47,7 +47,6 @@ RSpec.describe TemporalScopes::HasTemporalScopes do
       subject(:past_scope) { class_with_temporal_scopes.past }
       it { should be_kind_of ActiveRecord::Relation }
       it "returns past objects" do
-        p past_scope.to_sql
         expect(past_scope).to include past_article
       end
       it "returns no current objects" do
