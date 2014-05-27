@@ -24,40 +24,69 @@ RSpec.describe TemporalScopes::HasTemporalScopes do
     describe ".all (default scope)" do
       subject(:default_scope) { class_with_temporal_scopes.all }
       it { should be_kind_of ActiveRecord::Relation }
-      it "returns current objects" do
-        expect(default_scope).to include current_article
-      end
-      it "returns no past objects" do
-        expect(default_scope).not_to include past_article
-      end
+      it { should include current_article }
+      it { should_not include past_article }
     end
     
     describe ".now" do
       subject(:now_scope) { class_with_temporal_scopes.now }
       it { should be_kind_of ActiveRecord::Relation }
-      it "returns current objects" do
-        expect(now_scope).to include current_article
-      end
-      it "returns no past objects" do
-        expect(now_scope).not_to include past_article
-      end
+      it { should include current_article }
+      it { should_not include past_article }
     end
     
     describe ".past" do
       subject(:past_scope) { class_with_temporal_scopes.past }
       it { should be_kind_of ActiveRecord::Relation }
-      it "returns past objects" do
-        expect(past_scope).to include past_article
-      end
-      it "returns no current objects" do
-        expect(past_scope).not_to include current_article
-      end
+      it { should include past_article }
+      it { should_not include current_article }
     end
     
-    describe ".with_past"
+    describe ".with_past" do
+      subject(:with_past_scope) { class_with_temporal_scopes.with_past }
+      it { should be_kind_of ActiveRecord::Relation }
+      it { should include current_article }
+      it { should include past_article }
+    end
+    
     describe "#valid_from"
     describe "#valid_to"
-    describe "#archive"
+    
+    describe "#archive" do
+      describe "when not archived (=current)" do
+        subject(:archive_current_article) { current_article.archive }
+        it "makes the object fall under the :past scope" do
+          expect(class_with_temporal_scopes.past).not_to include current_article
+          archive_current_article
+          expect(class_with_temporal_scopes.past).to include current_article
+        end
+        it "sets the :valid_to attribute to the current time" do
+          Timecop.freeze do
+            expect(current_article.valid_to).to be_nil
+            archive_current_article
+            expect(current_article.valid_to).to eq(Time.zone.now)
+          end
+        end
+        describe "with :at parameter" do
+          subject(:archive_current_article_1_hour_ago) { current_article.archive at: 1.hour.ago }
+          it "sets the :valid_to attribute to the given time" do
+            Timecop.freeze do
+              expect(current_article.valid_to).to be_nil
+              archive_current_article_1_hour_ago
+              expect(current_article.valid_to).to eq(1.hour.ago)
+            end
+          end
+        end
+      end
+      describe "when already archived (=past)" do
+        subject(:archive_past_article) { past_article.archive }
+        it "keeps the :valid_to attribute as it was" do
+          valid_to_as_it_was_before = past_article.valid_to
+          archive_past_article
+          expect(past_article.reload.valid_to).to eq(valid_to_as_it_was_before)
+        end
+      end
+    end
     
   end
   

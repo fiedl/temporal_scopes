@@ -17,6 +17,7 @@ module TemporalScopes
         .where(arel_table[:valid_to].eq(nil).or(arel_table[:valid_to].gteq(Time.zone.now)))
       }
       scope :past, -> { without_temporal_condition.where('valid_to < ?', Time.zone.now) }
+      scope :with_past, -> { without_temporal_condition }
       
       default_scope { now }
       
@@ -28,6 +29,14 @@ module TemporalScopes
     end
     
     module InstanceMethods
+      
+      def archive(params = {})
+        unless self.valid_to
+          archive_at = params[:at] || Time.zone.now
+          update_attribute(:valid_to, archive_at)
+        end
+      end
+
     end
 
   end
