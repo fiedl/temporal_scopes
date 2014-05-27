@@ -1,4 +1,4 @@
-# TemporalScopes
+# TemporalScopes [![Build Status](https://travis-ci.org/fiedl/temporal_scopes.svg?branch=master)](https://travis-ci.org/fiedl/temporal_scopes)
 
 Providing temporal scopes for an ActiveRecord model that allow to query by time.
 
