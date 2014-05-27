@@ -19,5 +19,7 @@ group :development, :test do
   gem 'fuubar'
   gem 'guard-rspec', '~> 4.2', require: false
   gem 'timecop'
+  gem 'redcarpet'
+  gem 'yard-activerecord'
 end
 

@@ -106,6 +106,7 @@ GEM
     rb-fsevent (0.9.4)
     rb-inotify (0.9.4)
       ffi (>= 0.5.0)
+    redcarpet (3.1.2)
     rspec (2.14.1)
       rspec-core (~> 2.14.0)
       rspec-expectations (~> 2.14.0)
@@ -144,6 +145,9 @@ GEM
       polyglot (>= 0.3.1)
     tzinfo (1.1.0)
       thread_safe (~> 0.1)
+    yard (0.8.7.4)
+    yard-activerecord (0.0.11)
+      yard (>= 0.8.3)
 
 PLATFORMS
   ruby
@@ -152,7 +156,9 @@ DEPENDENCIES
   factory_girl_rails
   fuubar
   guard-rspec (~> 4.2)
+  redcarpet
   rspec-rails (~> 2.14.2)
   sqlite3
   temporal_scopes!
   timecop
+  yard-activerecord
