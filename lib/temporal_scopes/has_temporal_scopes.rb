@@ -43,6 +43,10 @@ module TemporalScopes
       include InstanceMethods
     end
     
+    # The following class methods and scopes are added to 
+    # `ActiveRecord::Base` classes that have been called
+    # `has_temporal_scopes` on.
+    #
     module ClassMethods
 
       # Removes temporal conditions from the query.
@@ -71,18 +75,47 @@ module TemporalScopes
         .where(arel_table[:valid_to].eq(nil).or(arel_table[:valid_to].gteq(Time.zone.now)))
       end
       
+      # Filters for only past objects.
+      #
+      # @return [ActiveRecord::Relation] only past objects.
+      #
+      # @example Getting only archived articles by an author.
+      #     author.articles.past
+      #
       def past
         without_temporal_condition.where('valid_to < ?', Time.zone.now)
       end
       
+      # Removes the filters such that past and present
+      # objects are returned.
+      # 
+      # @return [ActiveRecord::Relation] past and current objects.
+      #
       def with_past
         without_temporal_condition
       end
 
     end
-    
+
+    # The following instance methods are added to 
+    # `ActiveRecord::Base` objects, which classes have 
+    # been called `has_temporal_scopes` on.
+    #
     module InstanceMethods
       
+      # Archives an object, that is, makes it a past object.
+      # 
+      # @param params [Hash] a hash of parameters.
+      # @option params :at [DateTime] (Time.zonw.now) when to archive the object, i.e. the time when the present object becomes a past object, i.e. expires.
+      #
+      # @return [ActiveRecord::Base] the archived object.
+      #
+      # @example Archiving an object now.
+      #     article.archive
+      #
+      # @example Archiving an object with effect 4 hours ago.
+      #     article.archive at: 4.hours.ago
+      # 
       def archive(params = {})
         unless self.valid_to
           archive_at = params[:at] || Time.zone.now
