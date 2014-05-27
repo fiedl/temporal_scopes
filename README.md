@@ -6,7 +6,43 @@ This is done by adding the database columns `valid_from` and `valid_to` to the m
 
 ## Usage
 
-TODO
+### Make an `ActiveRecord` have temporal scopes
+
+```ruby
+class Article < ActiveRecord::Base
+  has_temporal_scopes
+  
+end
+```
+
+### Archive an object
+
+```ruby
+current_article = Article.create(title: 'My new article', body: 'Lorem ipsum')
+
+past_article = Article.create(title: 'My new article', body: 'Lorem ipsum')
+past_article.archive
+
+# or provide a datetime:
+past_article.archive at: 1.hour.ago
+```
+
+### Use temporal scopes for filtering
+
+```ruby
+Article.now                          #  => [current_article]
+Article.past                         #  => [past_article]
+Article.with_past                    #  => [current_article, past_article]
+```
+
+Note that the **default scope** is set to `now`.
+
+```ruby
+Article.all                          #  => [current_article]
+Article.now                          #  => [current_article]
+Article.with_past                    #  => [current_article, past_article]
+Article.without_temporal_condition   #  => [current_article, past_article]
+```
 
 ### Documentation
 
