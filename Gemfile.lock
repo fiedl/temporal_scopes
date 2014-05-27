@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    temporal_scopes (0.0.2)
+    temporal_scopes (0.0.3)
       rails (~> 4.1.1)
 
 GEM

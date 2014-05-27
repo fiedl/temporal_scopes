@@ -58,8 +58,10 @@ module TemporalScopes
       # @return [ActiveRecord::Relation] the relation without temporal conditions on `valid_from` and `valid_to`.
       #
       def without_temporal_condition
-        relation = unscope(where: [:valid_from, :valid_to]) 
-        relation.where_values.delete_if { |query| query.to_sql.include?("\"valid_from\"") || query.to_sql.include?("\"valid_to\"") } if relation && relation.where_values
+        relation = rewhere(valid_from: nil, valid_to: nil)
+        relation.where_values.delete_if { |query| 
+          query.to_sql.include?("\"valid_from\"") || query.to_sql.include?("\"valid_to\"") 
+        } 
         relation
       end
 
