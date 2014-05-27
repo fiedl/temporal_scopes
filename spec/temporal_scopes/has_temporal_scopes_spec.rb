@@ -67,6 +67,9 @@ RSpec.describe TemporalScopes::HasTemporalScopes do
             expect(current_article.valid_to).to eq(Time.zone.now)
           end
         end
+        it "returns the archived object" do
+          expect(archive_current_article).to eq(current_article)
+        end
         describe "with :at parameter" do
           subject(:archive_current_article_1_hour_ago) { current_article.archive at: 1.hour.ago }
           it "sets the :valid_to attribute to the given time" do

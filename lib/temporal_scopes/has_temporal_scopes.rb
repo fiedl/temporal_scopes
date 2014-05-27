@@ -121,6 +121,7 @@ module TemporalScopes
           archive_at = params[:at] || Time.zone.now
           update_attribute(:valid_to, archive_at)
         end
+        return self
       end
 
     end
