@@ -37,35 +37,6 @@ module TemporalScopes
     #
     def has_temporal_scopes
       
-      # Removes temporal conditions from the query.
-      #
-      # ## Example
-      #
-      #     Article.where(valid_to: 10.days.ago..1.day.ago)  # => []  (due to default scope.)
-      #     Article.without_temporal_condition.where(valid_to: 10.days.ago..1.day.ago)  # returns the desired articles.
-      #
-      # @return [ActiveRecord::Relation] the relation without temporal conditions on `valid_from` and `valid_to`.
-      #
-      scope :without_temporal_condition, -> { 
-        relation = unscope(where: [:valid_from, :valid_to]) 
-        relation.where_values.delete_if { |query| query.to_sql.include?("\"valid_from\"") || query.to_sql.include?("\"valid_to\"") }
-        relation
-      }
-
-      # Filters for only current objects.
-      #
-      # This is the default scope.
-      #
-      # @return [ActiveRecord::Relation] only current objects.
-      #
-      scope :now, -> { 
-        without_temporal_condition
-        .where(arel_table[:valid_from].eq(nil).or(arel_table[:valid_from].lteq(Time.zone.now)))
-        .where(arel_table[:valid_to].eq(nil).or(arel_table[:valid_to].gteq(Time.zone.now)))
-      }
-      scope :past, -> { without_temporal_condition.where('valid_to < ?', Time.zone.now) }
-      scope :with_past, -> { without_temporal_condition }
-      
       default_scope { now }
       
       extend ClassMethods
@@ -73,6 +44,41 @@ module TemporalScopes
     end
     
     module ClassMethods
+
+      # Removes temporal conditions from the query.
+      #
+      # @example
+      #     Article.where(valid_to: 10.days.ago..1.day.ago)                             # => []  (due to default scope.)
+      #     Article.without_temporal_condition.where(valid_to: 10.days.ago..1.day.ago)  # returns the desired articles.
+      #
+      # @return [ActiveRecord::Relation] the relation without temporal conditions on `valid_from` and `valid_to`.
+      #
+      def without_temporal_condition
+        relation = unscope(where: [:valid_from, :valid_to]) 
+        relation.where_values.delete_if { |query| query.to_sql.include?("\"valid_from\"") || query.to_sql.include?("\"valid_to\"") }
+        relation
+      end
+
+      # Filters for only current objects.
+      #
+      # This is the default scope.
+      #
+      # @return [ActiveRecord::Relation] only current objects.
+      #
+      def now
+        without_temporal_condition
+        .where(arel_table[:valid_from].eq(nil).or(arel_table[:valid_from].lteq(Time.zone.now)))
+        .where(arel_table[:valid_to].eq(nil).or(arel_table[:valid_to].gteq(Time.zone.now)))
+      end
+      
+      def past
+        without_temporal_condition.where('valid_to < ?', Time.zone.now)
+      end
+      
+      def with_past
+        without_temporal_condition
+      end
+
     end
     
     module InstanceMethods
