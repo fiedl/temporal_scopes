@@ -50,7 +50,9 @@ Further [documentation can be found on rubydoc.info](http://rubydoc.info/github/
 
 ### Caveats
 
+* This gem requires Rails 4.
 * There is only one `valid_from` and one `valid_to` time per object. Therefore, you can't keep track of first archiving an object and later un-archiving it. Un-archiving an object loses the information of first archiving it.
+* Currently, the future is not handled (`Article.future` and `article.archive at: 1.hour.from.now` do not work.) But this is planned to be implemented in the future.
 
 ## Installation
 
