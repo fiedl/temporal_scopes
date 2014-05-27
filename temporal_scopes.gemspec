@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.authors     = ["Sebastian Fiedlschuster"]
   s.email       = ["sebastian@fiedlschuster.de"]
   s.homepage    = "https://github.com/fiedl/temporal_scopes"
-  s.summary     = "Providing temporal scopes for an ActiveRecord model that allow to query by time."
+  s.summary     = "Providing temporal scopes for an ActiveRecord model to allow queries by time. For example, `MyModel.now.where(...)`, `my_model.archive`, `MyModel.past.where(...)`."
   s.description = s.summary
   s.license     = "MIT"
 
