@@ -81,9 +81,11 @@ RSpec.describe TemporalScopes::HasTemporalScopes do
       describe "when already archived (=past)" do
         subject(:archive_past_article) { past_article.archive }
         it "keeps the :valid_to attribute as it was" do
-          valid_to_as_it_was_before = past_article.valid_to
-          archive_past_article
-          expect(past_article.reload.valid_to).to eq(valid_to_as_it_was_before)
+          Timecop.freeze do
+            valid_to_as_it_was_before = past_article.valid_to
+            archive_past_article
+            expect(past_article.reload.valid_to).to eq(valid_to_as_it_was_before)
+          end
         end
       end
     end
