@@ -1,0 +1,10 @@
+rvm:
+  - "2.1.2"
+env: 
+  - "RAILS_ENV=test"
+install:
+  - bundle install
+before_script:
+  - "cd spec/dummy_app && bundle exec rake db:create db:migrate"
+script:
+  - "cd $TRAVIS_BUILD_DIR && bundle exec rake"
