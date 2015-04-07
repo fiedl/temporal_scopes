@@ -37,7 +37,9 @@ module TemporalScopes
     #
     def has_temporal_scopes
       
-      default_scope { now }
+      default_scope { 
+        now 
+      }
       
       extend ClassMethods
       include InstanceMethods
@@ -58,15 +60,34 @@ module TemporalScopes
       # @return [ActiveRecord::Relation] the relation without temporal conditions on `valid_from` and `valid_to`.
       #
       def without_temporal_condition
-        relation = unscope(where: [])
-        relation.where_values.delete_if { |query|
-          begin
-            query.to_sql.include?("\"valid_from\"") || query.to_sql.include?("\"valid_to\"")
-          rescue  # not successfully created sql query
-            false
-          end
-        } 
-        relation
+        relation = self.all
+        
+        relation.where_values.delete_if { |where_value| 
+          where_value.to_sql.include?('valid_from') || where_value.to_sql.include?('valid_to') || where_value.to_sql.include?('1=0')
+        }
+        
+        #pp relation.to_sql
+        
+        return relation
+        
+        ##relation = unscope(where: [])
+        #p "QUERY"
+        #relation.where_values.delete_if { |query|
+        #  p "*"
+        #  query.each { |q| 
+        #    pp q
+        #  }
+        #  
+        #  begin
+        #    query.to_sql.include?("\"valid_from\"") || query.to_sql.include?("\"valid_to\"")
+        #  rescue  # not successfully created sql query
+        #    false
+        #  end
+        #} 
+        #relation
+        
+        #unscope(where: :valid_from)
+        #unscope(:where)
       end
 
       # Filters for only current objects.
@@ -76,8 +97,8 @@ module TemporalScopes
       # @return [ActiveRecord::Relation] only current objects.
       #
       def now
-        without_temporal_condition
-        .where(arel_table[:valid_from].eq(nil).or(arel_table[:valid_from].lteq(Time.zone.now)))
+        #without_temporal_condition
+        where(arel_table[:valid_from].eq(nil).or(arel_table[:valid_from].lteq(Time.zone.now)))
         .where(arel_table[:valid_to].eq(nil).or(arel_table[:valid_to].gteq(Time.zone.now)))
       end
       
