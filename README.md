@@ -1,5 +1,11 @@
 # TemporalScopes [![Build Status](https://travis-ci.org/fiedl/temporal_scopes.svg?branch=master)](https://travis-ci.org/fiedl/temporal_scopes) [![Gem Version](https://badge.fury.io/rb/temporal_scopes.svg)](http://badge.fury.io/rb/temporal_scopes)
 
+----
+
+**GEM UNMAINTAINED: We have abandoned this gem and included the scopes into a project directly.** If you are looking for updates, have a look at this file: https://github.com/fiedl/your_platform/blob/master/app/models/user_group_membership_mixins/validity_range.rb
+
+----
+
 Providing temporal scopes for an ActiveRecord model to allow queries by time. For example, `MyModel.now.where(...)`, `my_model.archive`, `MyModel.past.where(...)`.
 
 This is done by adding the database columns `valid_from` and `valid_to` to the model's table.
